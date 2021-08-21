@@ -37,7 +37,7 @@ def barcodecap():
 # 9 = Treat the image as a single word in a circle.
 # 10 = Treat the image as a single character.
 def vdo_ocr():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('rtsp://192.168.43.1:8080/h264_pcm.sdp')
     pytesseract.pytesseract.tesseract_cmd = 'D:/tesseract-ocr/tesseract.exe'
     while (True):
         ret, frame = cap.read()
@@ -123,11 +123,62 @@ def mainprogram():
     cv2.destroyAllWindows()
 
 
+def testmotor():
+    pytesseract.pytesseract.tesseract_cmd = 'D:/tesseract-ocr/tesseract.exe'
+    configdata= "--psm 6"
+    # img = cv2.imread('D:\VSCODE\OpenCVProject\env\IMG_20210820_081351.jpg')
+    # img = cv2.resize(img,(1600,1200))
+    # img = cv2.pyrUp(img,img)
+    # img = img[500:1000,400:1300]
+
+    img = cv2.imread('D:\VSCODE\OpenCVProject\env\motor2.jpg')
+    img = cv2.pyrDown(img,img)
+   
+    himg,wimg,_ =  img.shape
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    # blur = cv2.GaussianBlur(gray,(3,3),1)
+    _,thresh = cv2.threshold(gray,240,255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(15,3))
+    dialat = cv2.dilate(thresh,kernel,iterations=3)
+
+    result = 255 - cv2.bitwise_and(dialat,thresh)
+    boxes = pytesseract.image_to_boxes(result,lang="eng",config=configdata)
+    # textdata = pytesseract.image_to_string(result,lang="eng",config=configdata)
+
+
+    contours,hierachy = cv2.findContours(dialat,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    for cnt in contours:
+        #     # area = cv2.contourArea(cnt)
+        (x,y,w,h) = cv2.boundingRect(cnt)
+        cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
+        # cv2.putText(img,textdata,(x,y+25),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,255),1)
+    
+    boxes = pytesseract.image_to_boxes(result)
+    # print(data)
+    for b in boxes.splitlines():
+        # print(b)
+        b = b.split(' ')
+        # print(b)
+        t,x,y,w,h = b[0],int(b[1]),int(b[2]),int(b[3]),int(b[4])
+        # cv2.rectangle(img,(x,himg-y),(w,himg-h),(0,0,255),2)
+        cv2.putText(img,t,(x,himg-y+10),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,255),1)
+
+    cv2.imshow("motor",img)
+    cv2.imshow("thresh",thresh)
+
+    cv2.imshow("result",result)
+    cv2.imshow("dialat",dialat)
+
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
     # mainprogram()
     # testocr()
     # vdo_ocr()
-    barcodecap()
+    testmotor()
+    # barcodecap()
 
