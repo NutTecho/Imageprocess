@@ -1,5 +1,5 @@
 import cv2
-import pytesseract
+from pytesseract import Image
 import struct
 import numpy as np
 from pyzbar.pyzbar import decode

@@ -2,3 +2,7 @@ Lib
 Scripts
 Include
 pyvenv.cfg
+tessdata-main
+tessdata-main.zip
+osd.traineddata
+equ.traineddata

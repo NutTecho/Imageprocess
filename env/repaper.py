@@ -48,7 +48,7 @@ def reorder(mypoints):
     mypointnew[2] = mypoint[np.argmax(diff)]
     return mypointnew
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(10,160)
 widthImage = 640
 heightImage = 480

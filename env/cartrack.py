@@ -1,7 +1,7 @@
 import cv2
 # from tracker import *
 
-cap = cv2.VideoCapture("highway.mp4")
+cap = cv2.VideoCapture("D:\VSCODE\OpenCVProject\env\highway.mp4")
 object_detector = cv2.createBackgroundSubtractorMOG2(history=100,varThreshold=40)
 
 while(cap.read()):

@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-cap = cv2.VideoCapture('rtsp://192.168.43.1:8080/h264_pcm.sdp')
-
+# cap = cv2.VideoCapture('rtsp://192.168.43.1:8080/h264_pcm.sdp')
+cap = cv2.VideoCapture(0)
 while (True):
     ref,frame = cap.read()
     # roi = frame[:600,0:800]
