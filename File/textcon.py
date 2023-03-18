@@ -3,13 +3,13 @@ import numpy as np
 import pytesseract
 
 # cap = cv2.VideoCapture('rtsp://192.168.43.1:8080/h264_pcm.sdp')
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 pytesseract.pytesseract.tesseract_cmd = 'D:/tesseract-ocr/tesseract.exe'
 config = "--psm 4"
 
 while (True):
     ref,frame = cap.read()
-    himg,wimg,_ =  frame.shape()
+    himg,wimg,_ =  frame.shape
     gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     _,thresh = cv2.threshold(gray,240,255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
 

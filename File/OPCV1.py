@@ -1,10 +1,15 @@
 import cv2
-from pytesseract import Image
 import struct
 import numpy as np
 from pyzbar.pyzbar import decode
-# faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-# eyeCascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+import time
+import pytesseract
+from PIL import Image
+from imutils.video import FPS , WebcamVideoStream , FileVideoStream
+import imutils
+
+faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+eyeCascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 
 def barcodecap():
     cap = cv2.VideoCapture(1)
@@ -37,7 +42,8 @@ def barcodecap():
 # 9 = Treat the image as a single word in a circle.
 # 10 = Treat the image as a single character.
 def vdo_ocr():
-    cap = cv2.VideoCapture('rtsp://192.168.43.1:8080/h264_pcm.sdp')
+    # cap = cv2.VideoCapture('rtsp://192.168.43.1:8080/h264_pcm.sdp')
+    cap = cv2.VideoCapture(0)
     pytesseract.pytesseract.tesseract_cmd = 'D:/tesseract-ocr/tesseract.exe'
     while (True):
         ret, frame = cap.read()
@@ -63,9 +69,6 @@ def vdo_ocr():
     cap.release()
     cv2.destroyAllWindows()
 
-
-
-
 def testocr():
     pytesseract.pytesseract.tesseract_cmd = 'D:/tesseract-ocr/tesseract.exe'
     img = cv2.imread("bigsleep.jpg")
@@ -89,8 +92,6 @@ def testocr():
     cv2.imshow('result',adth)
     cv2.waitKey(0)
 
-
-
 def draw_bound(img, classifier, scaleFactor, minNeighbors, color, text):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     feature = classifier.detectMultiScale(gray, scaleFactor, minNeighbors)
@@ -101,13 +102,11 @@ def draw_bound(img, classifier, scaleFactor, minNeighbors, color, text):
         coords = [x, y, w, h]
     return img, coords
 
-
 def detect(img, faceCascade, eyeCascade):
     img, coords = draw_bound(img, faceCascade, 1.1, 10, (255, 0, 0), "Face")
     img, coords = draw_bound(img, eyeCascade, 1.1, 12, (0, 0, 255), "eye")
 
     return img
-
 
 def mainprogram():
     # cap = cv2.VideoCapture('rtsp://192.168.137.51:8080/h264_pcm.sdp')
@@ -122,7 +121,6 @@ def mainprogram():
     cap.release()
     cv2.destroyAllWindows()
 
-
 def testmotor():
     pytesseract.pytesseract.tesseract_cmd = 'D:/tesseract-ocr/tesseract.exe'
     configdata= "--psm 6"
@@ -131,7 +129,7 @@ def testmotor():
     # img = cv2.pyrUp(img,img)
     # img = img[500:1000,400:1300]
 
-    img = cv2.imread('D:\VSCODE\OpenCVProject\env\motor2.jpg')
+    img = cv2.imread('D:\VSCODE\OpenCVProject\Image\motor2.jpg')
     img = cv2.pyrDown(img,img)
    
     himg,wimg,_ =  img.shape
@@ -174,6 +172,41 @@ def testmotor():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def Concept1():
+    vs = WebcamVideoStream(src=0).start()
+    # cap = cv2.VideoCapture(0)
+    new_frame_time = 0
+    prev_frame_time = 0
+    starttime = 0
+    fr = 0
+    fps = FPS().start()
+
+    while True:
+        # starttime = cv2.getTickCount()
+        new_frame_time = time.time()
+        # (grabbed , frame) = cap.read()
+        frame = vs.read()
+        frame = imutils.resize(frame,width = 600)
+
+        if (new_frame_time-prev_frame_time > 0):
+            fr = 1/(new_frame_time-prev_frame_time)
+
+        prev_frame_time = new_frame_time
+        # fr = (cv2.getTickCount() - starttime)/ cv2.getTickFrequency()
+        cv2.putText(frame,"FPS: {:.2f}".format(fr),(10,30),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,255),2)
+        cv2.imshow('frame', frame)
+    
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        fps.update()
+
+    fps.stop()
+    print("[INFO] elasped time : {:.2f}" .format(fps.elapsed()))
+    print("[INFO] approx FPS : {:.2f}" .format(fps.fps()))
+
+    # vs.release()
+    cv2.destroyAllWindows()
+    vs.stop()
 
 if __name__ == "__main__":
     # mainprogram()
@@ -181,4 +214,5 @@ if __name__ == "__main__":
     # vdo_ocr()
     testmotor()
     # barcodecap()
+    # Concept1()
 

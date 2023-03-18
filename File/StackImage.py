@@ -129,7 +129,7 @@ ans = [1,2,0,1,4]
 #=======================================
 
 #===========basic setting=========
-img = cv2.resize(img,(width,height))
+img = cv2.resize(img,dsize= (width,height))
 imgcontours = img.copy()
 imgfinal = img.copy()
 imgBigcontours = img.copy()

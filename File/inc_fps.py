@@ -14,7 +14,7 @@ def Concept1():
 
     while True:
         (grabbed , frame) = stream.read()
-        frame = imutils.resize(frame,width = 400)
+        frame = imutils.resize(frame,width = 600)
 
         cv2.putText(frame,"Hello",(10,30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0),1)
         cv2.imshow('frame', frame)
@@ -37,10 +37,11 @@ def Concept2():
     new_frame_time = 0
     prev_frame_time = 0
     ocrResult = ""
+    starttime = 0
     time.sleep(1.0)
 
     while True:
-
+        # starttime = cv2.getTickCount()
         new_frame_time = time.time()
         frame = vs.read()
         himg,wimg,_ =  frame.shape
@@ -51,11 +52,6 @@ def Concept2():
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(15,3))
         dialat = cv2.dilate(thresh,kernel,iterations=2)
         result = 255 - cv2.bitwise_and(dialat,thresh)
-
-        if (new_frame_time-prev_frame_time > 0):
-            fr = 1/(new_frame_time-prev_frame_time)
-
-        prev_frame_time = new_frame_time
 
         with PyTessBaseAPI(path="D:/VSCODE/OpenCVProject/tessdata-main", psm=PSM.AUTO_OSD ,lang ="eng") as api:
             api.SetVariable("save_blob_choices","T")
@@ -93,7 +89,11 @@ def Concept2():
                 # print(u"Box[{0}]: x={x}, y={y}, w={w}, h={h}, "
                 #     "confidence: {1}, text: {2}".format(i, conf, ocrResult, **b))
             cv2.putText(frame,ocrResult,(10,himg - 25),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,255),1) 
-
+        
+        if (new_frame_time-prev_frame_time > 0):
+            fr = 1/(new_frame_time-prev_frame_time)
+        prev_frame_time = new_frame_time
+        # fr = (cv2.getTickCount() - starttime)/ cv2.getTickFrequency()
         cv2.putText(frame, "FPS: {:.2f}".format(fr),(10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)	
         cv2.imshow('result', result)
         cv2.imshow('frame', frame)
@@ -138,4 +138,6 @@ def Concept3(frame):
     # print(tesserocr.image_to_text(image))
 
 if __name__ == "__main__":
-    Concept2()
+    Concept1()
+    # Concept2()
+    # print(cv2.getBuildInformation())
