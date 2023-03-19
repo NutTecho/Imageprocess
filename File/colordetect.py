@@ -5,7 +5,7 @@ import numpy as np
 def empty(img):
     pass
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 cv2.namedWindow("TrackBar")
 cv2.resizeWindow("TrackBar",600,300)
 cv2.createTrackbar("hue_min","TrackBar",0,179,empty)
@@ -27,18 +27,18 @@ while True:
     val_min = cv2.getTrackbarPos("val_min","TrackBar")
     val_max = cv2.getTrackbarPos("val_max","TrackBar")
 
-    red_lower = np.array([hue_min,sat_min,val_min],np.uint8)
-    red_upper = np.array([hue_max,sat_max,val_max],np.uint8)
-    red_mask = cv2.inRange(hsv,red_lower,red_upper)
+    # red_lower = np.array([hue_min,sat_min,val_min],np.uint8)
+    # red_upper = np.array([hue_max,sat_max,val_max],np.uint8)
+    # red_mask = cv2.inRange(hsv,red_lower,red_upper)
 
     # green_lower = np.array([25, 52, 72], np.uint8)
     # green_upper = np.array([102, 255, 255], np.uint8)
     # green_mask = cv2.inRange(hsv, green_lower, green_upper)
   
 
-    # blue_lower = np.array([94, 80, 2], np.uint8)
-    # blue_upper = np.array([120, 255, 255], np.uint8)
-    # blue_mask = cv2.inRange(hsv, blue_lower, blue_upper)
+    blue_lower = np.array([94, 80, 2], np.uint8)
+    blue_upper = np.array([120, 255, 255], np.uint8)
+    blue_mask = cv2.inRange(hsv, blue_lower, blue_upper)
 
     # Morphological Transform, Dilation
     # for each color and bitwise_and operator
@@ -46,17 +46,17 @@ while True:
     # to detect only that particular color
 
     kernal = np.ones((5,5),"uint8")
-    red_mask = cv2.dilate(red_mask,kernal)
-    res_red = cv2.bitwise_and(frame,frame,mask = red_mask)
+    # red_mask = cv2.dilate(red_mask,kernal)
+    # res_red = cv2.bitwise_and(frame,frame,mask = red_mask)
 
     # green_mask = cv2.dilate(green_mask,kernal)
     # res_green = cv2.bitwise_and(frame,frame,mask = green_mask)
 
-    # blue_mask = cv2.dilate(blue_mask,kernal)
-    # res_blue = cv2.bitwise_and(frame,frame,mask = blue_mask)
+    blue_mask = cv2.dilate(blue_mask,kernal)
+    res_blue = cv2.bitwise_and(frame,frame,mask = blue_mask)
 
 
-    contours,hierachy = cv2.findContours(red_mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    contours,hierachy = cv2.findContours(blue_mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
     for pic,cnt in enumerate(contours):
         area = cv2.contourArea(cnt)
@@ -100,7 +100,7 @@ while True:
         #    cv2.putText(frame,"Blue_Color",(x,y),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),1)
 
     cv2.imshow("SHOW",frame)
-    cv2.imshow("res",red_mask)
+    cv2.imshow("res",blue_mask)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 cap.release()
