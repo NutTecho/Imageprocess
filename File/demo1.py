@@ -56,7 +56,7 @@ def object_detect():
     fr = 0
     
     fps = FPS().start()
-    initializeTrackbar()
+    # initializeTrackbar()
 
     while(True):
         new_frame_time = time.time()
@@ -67,7 +67,7 @@ def object_detect():
         blur = cv2.GaussianBlur(gray,(7,7),0)
 
         #  ======= find corner ================
-        thres = valTackbar()
+        # thres = valTackbar()
         imgCanny = cv2.Canny(blur,80,200)
         kernal = np.ones((2,2))
         dial = cv2.dilate(imgCanny,kernal,iterations = 1)
@@ -89,7 +89,7 @@ def object_detect():
                 rect = cv2.minAreaRect(cnt)
                 (x,y) , (w,h) , angle = rect
                 box = cv2.BoxPoints(rect) if imutils.is_cv2() else cv2.boxPoints(rect) 
-                box = np.array(box, dtype="int")
+                # box = np.array(box, dtype="int")
                 # box = np.int0(box)q
                 # box = reorder(box)
                 box = perspective.order_points(box)

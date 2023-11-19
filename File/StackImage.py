@@ -120,7 +120,7 @@ def showAnswer(img,myindex,grading,ans,question,choices):
     return img
 
 #=======initial setting===================
-img = cv2.imread('D:/VSCODE/OpenCVProject/env/exam.jpg')
+img = cv2.imread('D:/VSCODE/OpenCVProject/Image/exam.jpg')
 width = 700
 height = 700
 question = 5

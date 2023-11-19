@@ -8,8 +8,8 @@ from PIL import Image
 from imutils.video import FPS , WebcamVideoStream , FileVideoStream
 import imutils
 
-faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eyeCascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+faceCascade = cv2.CascadeClassifier(r'D:\VSCODE\OpenCVProject\haarcascades\haarcascade_frontalface_default.xml')
+eyeCascade = cv2.CascadeClassifier(r'D:\VSCODE\OpenCVProject\haarcascades\haarcascade_eye.xml')
 
 def barcodecap():
     cap = cv2.VideoCapture(1)
@@ -209,10 +209,10 @@ def Concept1():
     vs.stop()
 
 if __name__ == "__main__":
-    # mainprogram()
+    mainprogram()
     # testocr()
     # vdo_ocr()
-    testmotor()
+    # testmotor()
     # barcodecap()
     # Concept1()
 
